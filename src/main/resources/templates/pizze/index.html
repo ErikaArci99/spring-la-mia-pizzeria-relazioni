@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/resources :: resources}"></head>
+
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <div class="container mt-4">
+        <h1 class="mb-4 text-center">Le nostre pizze</h1>
+
+        <!-- Form di ricerca -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-12 col-md-6 col-lg-4">
+                <form th:action="@{/search}" method="get" class="d-flex">
+                    <input type="text" name="keyword" class="form-control me-2" placeholder="Cerca pizza...">
+                    <button type="submit" class="btn btn-secondary">Cerca</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="text-center mb-3">
+            <a href="/pizza/create" class="btn btn-success">Crea nuova pizza</a>
+        </div>
+
+        <!-- se non ci sono pizze, mostra questo messaggio -->
+        <div th:if="${pizze.isEmpty()}">
+            <p class="text-danger text-center">Nessuna pizza disponibile.</p>
+        </div>
+
+        <!-- card pizze -->
+        <div th:if="${!pizze.isEmpty()}" class="row g-4">
+            <div class="col-12 col-sm-6 col-md-4" th:each="pizza : ${pizze}">
+                <div class="card h-100 pizza-card">
+                    <img th:src="${pizza.foto}" class="card-img-top pizza-img" alt="pizza">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${pizza.nome}"></h5>
+                        <p class="card-text" th:text="${pizza.descrizione}"></p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                        <small class="text-muted" th:text="${pizza.prezzo} + ' €'"></small>
+                        <div class="btn-group">
+                            <a th:href="@{/pizza/{id}(id=${pizza.id})}" class="btn btn-secondary btn-sm">Dettagli</a>
+                            <a th:href="@{/pizza/edit/{id}(id=${pizza.id})}"
+                                class="btn btn-warning btn-sm mx-2">Modifica</a>
+
+                            <!-- Pulsante che apre la modale -->
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                th:data-bs-target="'#deleteModal-' + ${pizza.id}">
+                                Elimina
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modale conferma eliminazione -->
+                <div class="modal fade" th:id="'deleteModal-' + ${pizza.id}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Conferma eliminazione</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Chiudi"></button>
+                            </div>
+                            <div class="modal-body">
+                                Sei sicuro di voler eliminare <strong th:text="${pizza.nome}"></strong>?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                                <form th:action="@{/pizza/delete/{id}(id=${pizza.id})}" method="post">
+                                    <button type="submit" class="btn btn-danger">Elimina</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fine modale -->
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/scripts :: scripts"></div>
+</body>
+
+</html>

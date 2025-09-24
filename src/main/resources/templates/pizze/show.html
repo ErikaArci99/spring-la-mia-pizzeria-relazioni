@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/resources :: resources}"></head>
+
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <div class="container mt-6">
+        <div class="card mx-auto" style="max-width: 600px;">
+            <img th:src="${pizza.foto}" class="card-img-top" alt="pizza">
+            <div class="card-body text-center">
+                <h3 class="card-title" th:text="${pizza.nome}"></h3>
+                <p class="card-text" th:text="${pizza.descrizione}"></p>
+                <h5 th:text="${pizza.prezzo} + ' €'"></h5>
+            </div>
+            <div class="card-footer d-flex justify-content-center gap-2">
+                <!-- Torna alla lista -->
+                <a href="/" class="btn btn-secondary">Torna alla lista</a>
+
+                <!-- Modifica -->
+                <a th:href="@{/pizza/edit/{id}(id=${pizza.id})}" class="btn btn-warning">Modifica</a>
+
+                <!-- Elimina con modale -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                    th:data-bs-target="'#deleteModal-' + ${pizza.id}">
+                    Elimina
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale conferma eliminazione -->
+    <div class="modal fade" th:id="'deleteModal-' + ${pizza.id}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Conferma eliminazione</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body">
+                    Sei sicuro di voler eliminare <strong th:text="${pizza.nome}"></strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <form th:action="@{/pizza/delete/{id}(id=${pizza.id})}" method="post">
+                        <button type="submit" class="btn btn-danger">Elimina</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/scripts :: scripts"></div>
+</body>
+
+</html>
