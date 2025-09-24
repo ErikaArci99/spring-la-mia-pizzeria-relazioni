@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/resources :: resources}"></head>
+
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <div class="container mt-5">
+        <h2>Crea nuova offerta speciale</h2>
+        <form th:action="@{/offerte/create}" th:object="${offerta}" method="post">
+            <input type="hidden" th:field="*{pizza.id}" />
+
+            <div class="mb-3">
+                <label for="titolo" class="form-label">Titolo</label>
+                <input type="text" th:field="*{titolo}" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label for="dataInizio" class="form-label">Data Inizio</label>
+                <input type="date" th:field="*{dataInizio}" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label for="dataFine" class="form-label">Data Fine</label>
+                <input type="date" th:field="*{dataFine}" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-success">Salva</button>
+            <a th:href="@{/pizza/{id}(id=${offerta.pizza.id})}" class="btn btn-secondary">Annulla</a>
+        </form>
+    </div>
+</body>
+
+</html>

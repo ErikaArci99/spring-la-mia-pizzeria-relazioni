@@ -23,19 +23,19 @@
 
                 <!-- Elimina con modale -->
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                    th:data-bs-target="'#deleteModal-' + ${pizza.id}">
+                    th:data-bs-target="'#deletePizzaModal-' + ${pizza.id}">
                     Elimina
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Modale conferma eliminazione -->
-    <div class="modal fade" th:id="'deleteModal-' + ${pizza.id}" tabindex="-1" aria-hidden="true">
+    <!-- Modale conferma eliminazione pizza -->
+    <div class="modal fade" th:id="'deletePizzaModal-' + ${pizza.id}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Conferma eliminazione</h5>
+                    <h5 class="modal-title">Conferma eliminazione pizza</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
                 </div>
                 <div class="modal-body">
@@ -49,6 +49,57 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Offerte speciali -->
+    <div class="container mt-4">
+        <h4>Offerte speciali</h4>
+
+        <ul class="list-group">
+            <li class="list-group-item" th:each="offerta : ${pizza.offerteSpeciali}">
+                <strong th:text="${offerta.titolo}"></strong><br>
+                Dal <span th:text="${offerta.dataInizio}"></span>
+                al <span th:text="${offerta.dataFine}"></span>
+
+                <!-- Pulsante modifica -->
+                <a th:href="@{/offerte/edit/{id}(id=${offerta.id})}" class="btn btn-sm btn-warning ms-2">Modifica</a>
+
+                <!-- Pulsante elimina con modale -->
+                <button type="button" class="btn btn-sm btn-danger ms-2" data-bs-toggle="modal"
+                    th:data-bs-target="'#deleteOffertaModal-' + ${offerta.id}">
+                    Elimina
+                </button>
+
+                <!-- Modale conferma eliminazione offerta -->
+                <div class="modal fade" th:id="'deleteOffertaModal-' + ${offerta.id}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Conferma eliminazione offerta</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Chiudi"></button>
+                            </div>
+                            <div class="modal-body">
+                                Sei sicuro di voler eliminare l’offerta
+                                <strong th:text="${offerta.titolo}"></strong>?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                                <form th:action="@{/offerte/delete/{id}(id=${offerta.id})}" method="post">
+                                    <button type="submit" class="btn btn-danger">Elimina</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </li>
+        </ul>
+
+        <!-- Pulsante crea nuova offerta -->
+        <a th:href="@{/offerte/create/{pizzaId}(pizzaId=${pizza.id})}" class="btn btn-primary mt-3">
+            Crea nuova offerta speciale
+        </a>
     </div>
 
     <div th:replace="fragments/scripts :: scripts"></div>
