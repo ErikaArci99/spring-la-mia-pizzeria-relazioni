@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/resources :: resources}"></head>
+
+<body>
+    <header th:replace="~{fragments/navbar :: navbar}"></header>
+
+    <main class="container py-5">
+        <h2 class="mb-4 text-center">Aggiungi nuovo ingrediente</h2>
+
+        <div class="mx-auto" style="max-width: 500px;">
+            <form th:action="@{/ingredients/create}" th:object="${ingredient}" method="post" class="row g-3">
+
+                <!-- Nome ingrediente -->
+                <div class="col-12">
+                    <label for="nome" class="form-label">Nome ingrediente</label>
+                    <input type="text" th:field="*{nome}" id="nome" class="form-control">
+                    <ul class="text-danger mt-1" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></ul>
+                </div>
+
+                <!-- Pulsanti -->
+                <div class="col-12 d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success">Salva ingrediente</button>
+                    <a href="/ingredients" class="btn btn-secondary">Annulla</a>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <div th:replace="fragments/scripts :: scripts"></div>
+</body>
+
+</html>

@@ -41,6 +41,16 @@
                     <ul class="text-danger mt-1" th:if="${#fields.hasErrors('foto')}" th:errors="*{foto}"></ul>
                 </div>
 
+                <!-- Ingredienti -->
+                <div class="col-12">
+                    <label class="form-label">Ingredienti</label>
+                    <div class="form-check" th:each="ing : ${allIngredients}">
+                        <input class="form-check-input" type="checkbox" th:id="${'ing-' + ing.id}"
+                            th:name="ingredientIds" th:value="${ing.id}">
+                        <label class="form-check-label" th:for="${'ing-' + ing.id}" th:text="${ing.nome}"></label>
+                    </div>
+                </div>
+
                 <!-- Pulsanti -->
                 <div class="col-12 d-flex justify-content-between">
                     <button type="submit" class="btn btn-success">Salva pizza</button>
@@ -50,6 +60,8 @@
             </form>
         </div>
     </main>
+    <div th:replace="fragments/scripts :: scripts"></div>
+
 </body>
 
 </html>

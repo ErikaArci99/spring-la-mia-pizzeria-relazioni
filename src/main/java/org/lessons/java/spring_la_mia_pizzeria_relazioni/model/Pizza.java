@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "pizza")
@@ -29,7 +31,20 @@ public class Pizza {
     @OneToMany(mappedBy = "pizza", cascade = CascadeType.ALL)
     private List<OffertaSpeciale> offerteSpeciali;
 
+    // relazione con ingredient
+    @ManyToMany
+    @JoinTable(name = "pizza_ingredient", joinColumns = @JoinColumn(name = "pizza_id"), inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
+    private Set<Ingredient> ingredienti = new HashSet<>();
+
     // getter e setter
+    public Set<Ingredient> getIngredienti() {
+        return ingredienti;
+    }
+
+    public void setIngredienti(Set<Ingredient> ingredienti) {
+        this.ingredienti = ingredienti;
+    }
+
     public List<OffertaSpeciale> getOfferteSpeciali() {
         return offerteSpeciali;
     }

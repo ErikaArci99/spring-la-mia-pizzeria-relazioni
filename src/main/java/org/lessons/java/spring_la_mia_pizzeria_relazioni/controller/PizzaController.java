@@ -1,25 +1,28 @@
 package org.lessons.java.spring_la_mia_pizzeria_relazioni.controller;
 
 import org.lessons.java.spring_la_mia_pizzeria_relazioni.model.Pizza;
+import org.lessons.java.spring_la_mia_pizzeria_relazioni.model.Ingredient;
 import org.lessons.java.spring_la_mia_pizzeria_relazioni.repository.PizzaRepository;
+import org.lessons.java.spring_la_mia_pizzeria_relazioni.repository.IngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 @Controller
 public class PizzaController {
 
     @Autowired
     private PizzaRepository pizzaRepository;
+
+    @Autowired
+    private IngredientRepository ingredientRepository;
 
     // Mostra tutte le pizze
     @GetMapping("/")
@@ -53,15 +56,27 @@ public class PizzaController {
     @GetMapping("/pizza/create")
     public String createForm(Model model) {
         model.addAttribute("pizza", new Pizza());
+        List<Ingredient> allIngredients = ingredientRepository.findAll();
+        model.addAttribute("allIngredients", allIngredients);
         return "pizze/create";
     }
 
     // Salvataggio nuova pizza
     @PostMapping("/pizza/create")
-    public String storePizza(@Valid @ModelAttribute("pizza") Pizza pizza, BindingResult bindingResult, Model model) {
+    public String storePizza(@Valid @ModelAttribute("pizza") Pizza pizza,
+            BindingResult bindingResult,
+            @RequestParam(value = "ingredientIds", required = false) List<Long> ingredientIds,
+            Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("allIngredients", ingredientRepository.findAll());
             return "pizze/create";
         }
+
+        if (ingredientIds != null) {
+            Set<Ingredient> ingredienti = new HashSet<>(ingredientRepository.findAllById(ingredientIds));
+            pizza.setIngredienti(ingredienti);
+        }
+
         pizzaRepository.save(pizza);
         return "redirect:/";
     }
@@ -74,6 +89,8 @@ public class PizzaController {
             return "redirect:/";
         }
         model.addAttribute("pizza", pizza);
+        List<Ingredient> allIngredients = ingredientRepository.findAll();
+        model.addAttribute("allIngredients", allIngredients);
         return "pizze/edit";
     }
 
@@ -82,10 +99,20 @@ public class PizzaController {
     public String update(@PathVariable Long id,
             @Valid @ModelAttribute("pizza") Pizza formPizza,
             BindingResult bindingResult,
+            @RequestParam(value = "ingredientIds", required = false) List<Long> ingredientIds,
             Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("allIngredients", ingredientRepository.findAll());
             return "pizze/edit";
         }
+
+        if (ingredientIds != null) {
+            Set<Ingredient> ingredienti = new HashSet<>(ingredientRepository.findAllById(ingredientIds));
+            formPizza.setIngredienti(ingredienti);
+        } else {
+            formPizza.getIngredienti().clear();
+        }
+
         formPizza.setId(id);
         pizzaRepository.save(formPizza);
         return "redirect:/pizza/" + id;

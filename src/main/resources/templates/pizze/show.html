@@ -4,7 +4,7 @@
 <head th:replace="~{fragments/resources :: resources}"></head>
 
 <body>
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    <header th:replace="~{fragments/navbar :: navbar}"></header>
 
     <div class="container mt-6">
         <div class="card mx-auto" style="max-width: 600px;">
@@ -15,18 +15,22 @@
                 <h5 th:text="${pizza.prezzo} + ' €'"></h5>
             </div>
             <div class="card-footer d-flex justify-content-center gap-2">
-                <!-- Torna alla lista -->
                 <a href="/" class="btn btn-secondary">Torna alla lista</a>
-
-                <!-- Modifica -->
                 <a th:href="@{/pizza/edit/{id}(id=${pizza.id})}" class="btn btn-warning">Modifica</a>
-
-                <!-- Elimina con modale -->
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                     th:data-bs-target="'#deletePizzaModal-' + ${pizza.id}">
                     Elimina
                 </button>
             </div>
+        </div>
+
+        <!-- Ingredienti -->
+        <div class="container mt-4">
+            <h4>Ingredienti</h4>
+            <ul class="list-group">
+                <li class="list-group-item" th:each="ing : ${pizza.ingredienti}" th:text="${ing.nome}"></li>
+                <li class="list-group-item" th:if="${pizza.ingredienti.isEmpty()}">Nessun ingrediente assegnato</li>
+            </ul>
         </div>
     </div>
 
@@ -49,57 +53,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Offerte speciali -->
-    <div class="container mt-4">
-        <h4>Offerte speciali</h4>
-
-        <ul class="list-group">
-            <li class="list-group-item" th:each="offerta : ${pizza.offerteSpeciali}">
-                <strong th:text="${offerta.titolo}"></strong><br>
-                Dal <span th:text="${offerta.dataInizio}"></span>
-                al <span th:text="${offerta.dataFine}"></span>
-
-                <!-- Pulsante modifica -->
-                <a th:href="@{/offerte/edit/{id}(id=${offerta.id})}" class="btn btn-sm btn-warning ms-2">Modifica</a>
-
-                <!-- Pulsante elimina con modale -->
-                <button type="button" class="btn btn-sm btn-danger ms-2" data-bs-toggle="modal"
-                    th:data-bs-target="'#deleteOffertaModal-' + ${offerta.id}">
-                    Elimina
-                </button>
-
-                <!-- Modale conferma eliminazione offerta -->
-                <div class="modal fade" th:id="'deleteOffertaModal-' + ${offerta.id}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Conferma eliminazione offerta</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Chiudi"></button>
-                            </div>
-                            <div class="modal-body">
-                                Sei sicuro di voler eliminare l’offerta
-                                <strong th:text="${offerta.titolo}"></strong>?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-                                <form th:action="@{/offerte/delete/{id}(id=${offerta.id})}" method="post">
-                                    <button type="submit" class="btn btn-danger">Elimina</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </li>
-        </ul>
-
-        <!-- Pulsante crea nuova offerta -->
-        <a th:href="@{/offerte/create/{pizzaId}(pizzaId=${pizza.id})}" class="btn btn-primary mt-3">
-            Crea nuova offerta speciale
-        </a>
     </div>
 
     <div th:replace="fragments/scripts :: scripts"></div>

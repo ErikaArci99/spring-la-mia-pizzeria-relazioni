@@ -4,7 +4,7 @@
 <head th:replace="~{fragments/resources :: resources}"></head>
 
 <body>
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    <header th:replace="~{fragments/navbar :: navbar}"></header>
 
     <div class="container mt-4">
         <h1 class="mb-4 text-center">Le nostre pizze</h1>
@@ -23,7 +23,7 @@
             <a href="/pizza/create" class="btn btn-success">Crea nuova pizza</a>
         </div>
 
-        <!-- se non ci sono pizze, mostra questo messaggio -->
+        <!-- se non ci sono pizze -->
         <div th:if="${pizze.isEmpty()}">
             <p class="text-danger text-center">Nessuna pizza disponibile.</p>
         </div>
@@ -43,8 +43,6 @@
                             <a th:href="@{/pizza/{id}(id=${pizza.id})}" class="btn btn-secondary btn-sm">Dettagli</a>
                             <a th:href="@{/pizza/edit/{id}(id=${pizza.id})}"
                                 class="btn btn-warning btn-sm mx-2">Modifica</a>
-
-                            <!-- Pulsante che apre la modale -->
                             <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
                                 th:data-bs-target="'#deleteModal-' + ${pizza.id}">
                                 Elimina

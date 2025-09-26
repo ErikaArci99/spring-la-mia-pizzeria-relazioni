@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/resources :: resources}"></head>
+
+<body>
+    <header th:replace="~{fragments/navbar :: navbar}"></header>
+
+    <div class="container mt-4">
+        <h1 class="mb-4 text-center">Ingredienti</h1>
+
+        <!-- Pulsante crea nuovo ingrediente -->
+        <div class="text-center mb-3">
+            <a href="/ingredients/create" class="btn btn-success">Aggiungi nuovo ingrediente</a>
+        </div>
+
+        <!-- se non ci sono ingredienti -->
+        <div th:if="${ingredients.isEmpty()}">
+            <p class="text-danger text-center">Nessun ingrediente disponibile.</p>
+        </div>
+
+        <!-- lista ingredienti -->
+        <div th:if="${!ingredients.isEmpty()}" class="row g-3">
+            <div class="col-12 col-md-6 col-lg-4" th:each="ing : ${ingredients}">
+                <div class="card">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <span th:text="${ing.nome}"></span>
+                        <div>
+                            <!-- Pulsante Modifica -->
+                            <a th:href="@{/ingredients/edit/{id}(id=${ing.id})}"
+                                class="btn btn-secondary btn-sm me-2">Modifica</a>
+
+                            <!-- Pulsante Elimina -->
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                th:data-bs-target="'#deleteModal-' + ${ing.id}">
+                                Elimina
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modale conferma eliminazione -->
+                <div class="modal fade" th:id="'deleteModal-' + ${ing.id}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Conferma eliminazione</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Chiudi"></button>
+                            </div>
+                            <div class="modal-body">
+                                Sei sicuro di voler eliminare l’ingrediente <strong th:text="${ing.nome}"></strong>?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                                <form th:action="@{/ingredients/delete/{id}(id=${ing.id})}" method="post">
+                                    <button type="submit" class="btn btn-danger">Elimina</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fine modale -->
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+
+</html>
