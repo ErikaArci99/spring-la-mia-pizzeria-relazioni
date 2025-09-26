@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 import jakarta.validation.Valid;
 
@@ -21,6 +22,14 @@ public class OffertaSpecialeController {
 
     @Autowired
     private PizzaRepository pizzaRepo;
+
+    // Lista tutte le offerte
+    @GetMapping
+    public String index(Model model) {
+        List<OffertaSpeciale> offerte = offertaRepo.findAll();
+        model.addAttribute("offerte", offerte);
+        return "offerte/index"; // Assicurati di avere il template offerte/index.html
+    }
 
     // form creazione nuova offerta
     @GetMapping("/create/{pizzaId}")

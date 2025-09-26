@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/resources :: resources}"></head>
+
+<body>
+    <header th:replace="~{fragments/navbar :: navbar}"></header>
+
+    <div class="container mt-4">
+        <h1 class="mb-4 text-center">Offerte Speciali</h1>
+
+        <!-- se non ci sono offerte -->
+        <div th:if="${offerte.isEmpty()}">
+            <p class="text-danger text-center">Nessuna offerta disponibile.</p>
+        </div>
+
+        <!-- lista offerte -->
+        <div th:if="${!offerte.isEmpty()}" class="row g-3">
+            <div class="col-12 col-md-6 col-lg-4" th:each="offerta : ${offerte}">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${offerta.titolo}"></h5>
+                        <p class="card-text"
+                            th:text="${#temporals.format(offerta.dataInizio,'dd/MM/yyyy')} + ' - ' + ${#temporals.format(offerta.dataFine,'dd/MM/yyyy')}">
+                        </p>
+                        <p class="card-text"><strong>Pizza:</strong> <span th:text="${offerta.pizza.nome}"></span></p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a th:href="@{/offerte/edit/{id}(id=${offerta.id})}" class="btn btn-primary btn-sm">Modifica</a>
+                        <form th:action="@{/offerte/delete/{id}(id=${offerta.id})}" method="post">
+                            <button type="submit" class="btn btn-danger btn-sm">Elimina</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+
+</html>
